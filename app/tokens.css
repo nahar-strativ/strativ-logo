@@ -1,0 +1,206 @@
+/* =============================================================================
+   Strativ Design Tokens
+   Source of truth: ~/.claude/skills/strativ-frontend/SKILL.md
+   Import once in app/globals.css (after Tailwind base layer).
+   ============================================================================= */
+
+:root {
+    /* ---------- Brand ---------- */
+    --brand-orange:           #FE5001;
+    --brand-orange-hover:     #E54600;
+    --brand-orange-pressed:   #C23A00;
+    --brand-orange-subtle:    rgba(254, 80, 1, 0.08);
+    --brand-yellow:           #F9B70E;
+    --brand-warm-black:       #1A0E1C;
+    --brand-black:            #000000;
+    --brand-light-grey:       #F1F1F1;
+    --brand-white:            #FFFFFF;
+
+    /* ---------- Neutral scale (Untitled UI / Tailwind-aligned) ---------- */
+    --gray-25:   #FCFCFD;
+    --gray-50:   #F9FAFB;
+    --gray-100:  #F2F4F7;
+    --gray-200:  #E4E7EC;
+    --gray-300:  #D0D5DD;
+    --gray-400:  #98A2B3;
+    --gray-500:  #667085;
+    --gray-600:  #475467;
+    --gray-700:  #344054;
+    --gray-800:  #1D2939;
+    --gray-900:  #101828;
+    --gray-950:  #0C111D;
+
+    /* ---------- Semantic — Light mode ---------- */
+    --bg-canvas:        var(--brand-white);
+    --bg-surface:       var(--brand-white);
+    --bg-subtle:        var(--gray-50);
+    --bg-muted:         var(--gray-100);
+    --bg-inverse:       var(--brand-warm-black);
+
+    --border-subtle:    var(--gray-100);
+    --border-default:   var(--gray-200);
+    --border-strong:    var(--gray-300);
+
+    /* Text colors are warm-black at decreasing opacity — NOT cool grays.
+       This keeps body text and icons in the same warm-black color family
+       as headings, which reads as on-brand instead of generic SaaS gray.
+       Icons inherit currentColor, so they darken with text automatically. */
+    --text-primary:     var(--brand-warm-black);              /* 100% */
+    --text-secondary:   rgba(26, 14, 28, 0.78);               /* 78% — body labels, descriptions */
+    --text-tertiary:    rgba(26, 14, 28, 0.56);               /* 56% — captions, eyebrow labels, axis ticks */
+    --text-disabled:    rgba(26, 14, 28, 0.32);               /* 32% — inactive */
+    --text-on-accent:   var(--brand-white);
+    --text-on-dark:     var(--brand-white);
+
+    --accent:               var(--brand-orange);
+    --accent-hover:         var(--brand-orange-hover);
+    --accent-pressed:       var(--brand-orange-pressed);
+    --accent-subtle:        var(--brand-orange-subtle);
+    --accent-foreground:    var(--brand-white);
+
+    /* ---------- Status (light) ---------- */
+    --success:          #039855;
+    --success-subtle:   rgba(3, 152, 85, 0.08);
+    --warning:          #DC6803;
+    --warning-subtle:   rgba(220, 104, 3, 0.08);
+    --error:            #D92D20;
+    --error-subtle:     rgba(217, 45, 32, 0.08);
+    --info:             #1570EF;
+    --info-subtle:      rgba(21, 112, 239, 0.08);
+
+    /* ---------- Data viz categorical ---------- */
+    --viz-1: #FE5001;
+    --viz-2: #1570EF;
+    --viz-3: #F9B70E;
+    --viz-4: #0E9384;
+    --viz-5: #7A5AF8;
+    --viz-6: #EC4899;
+    --viz-7: #12B76A;
+    --viz-8: #475467;
+
+    /* No sequential or diverging "ramps" — Strativ brand has zero gradients.
+       For heatmaps and intensity scales, use discrete opacity steps of --accent:
+       8%, 24%, 48%, 72%, 100%. For diverging data, use --info (negative) and
+       --accent (positive) with --gray-200 as the neutral midpoint. */
+
+    /* ---------- Spacing (8px grid) ---------- */
+    --space-0:    0px;
+    --space-0-5:  2px;
+    --space-1:    4px;
+    --space-2:    8px;
+    --space-3:    12px;
+    --space-4:    16px;
+    --space-5:    20px;
+    --space-6:    24px;
+    --space-8:    32px;
+    --space-10:   40px;
+    --space-12:   48px;
+    --space-16:   64px;
+    --space-20:   80px;
+    --space-24:   96px;
+
+    /* ---------- Radius ---------- */
+    --radius-xs:   4px;
+    --radius-sm:   8px;
+    --radius-md:   12px;
+    --radius-lg:   16px;
+    --radius-xl:   20px;
+    --radius-full: 9999px;
+
+    /* ---------- Shadows (light) ---------- */
+    --shadow-xs:  0 1px 2px rgba(16, 24, 40, 0.05);
+    --shadow-sm:  0 1px 3px rgba(16, 24, 40, 0.06), 0 1px 2px rgba(16, 24, 40, 0.04);
+    --shadow-md:  0 4px 8px -2px rgba(16, 24, 40, 0.08), 0 2px 4px -2px rgba(16, 24, 40, 0.04);
+    --shadow-lg:  0 12px 16px -4px rgba(16, 24, 40, 0.08), 0 4px 6px -2px rgba(16, 24, 40, 0.03);
+    --shadow-xl:  0 20px 24px -4px rgba(16, 24, 40, 0.10), 0 8px 8px -4px rgba(16, 24, 40, 0.04);
+    --shadow-focus: 0 0 0 4px rgba(254, 80, 1, 0.20);
+
+    /* ---------- Motion ---------- */
+    --duration-fast:    120ms;
+    --duration-base:    200ms;
+    --duration-slow:    320ms;
+    --duration-slower:  480ms;
+
+    --ease-out:     cubic-bezier(0.16, 1, 0.3, 1);
+    --ease-in-out:  cubic-bezier(0.65, 0, 0.35, 1);
+    --ease-in:      cubic-bezier(0.7, 0, 0.84, 0);
+
+    /* ---------- Layout ---------- */
+    --topbar-height:        56px;
+    --sidebar-width:        280px;
+    --sidebar-collapsed:    72px;
+    --container-max:        1440px;
+    --content-max:          1200px;
+
+    /* ---------- Typography — two fonts only ---------- */
+    /* Inter handles everything (body, labels, numbers, code). Expletus Sans handles headings.
+       No third font, ever. Use `font-variant-numeric: tabular-nums;` on Inter for aligned digits. */
+    --font-sans:    var(--font-sans-loader, "Inter"), system-ui, -apple-system, "Segoe UI", sans-serif;
+    --font-display: var(--font-display-loader, "Expletus Sans"), Georgia, serif;
+  }
+
+  /* ---------- Semantic — Dark mode ---------- */
+  .dark {
+    --bg-canvas:        #0F0A11;
+    --bg-surface:       var(--brand-warm-black);
+    --bg-subtle:        #221520;
+    --bg-muted:         #2E1E2C;
+    --bg-inverse:       var(--brand-white);
+
+    --border-subtle:    rgba(255, 255, 255, 0.06);
+    --border-default:   rgba(255, 255, 255, 0.10);
+    --border-strong:    rgba(255, 255, 255, 0.16);
+
+    /* Dark-mode mirror: white at decreasing opacity, same brand-aware approach */
+    --text-primary:     #F5F1F4;                              /* near-white, slight warm tint */
+    --text-secondary:   rgba(245, 241, 244, 0.78);            /* 78% */
+    --text-tertiary:    rgba(245, 241, 244, 0.56);            /* 56% */
+    --text-disabled:    rgba(245, 241, 244, 0.32);            /* 32% */
+    --text-on-accent:   var(--brand-white);
+    --text-on-dark:     var(--brand-white);
+
+    /* Accent unchanged — #FE5001 reads beautifully on warm black */
+    --accent:               var(--brand-orange);
+    --accent-hover:         #FF6A1F;
+    --accent-pressed:       var(--brand-orange-hover);
+    --accent-subtle:        rgba(254, 80, 1, 0.12);
+    --accent-foreground:    var(--brand-white);
+
+    /* Status (dark — slightly brighter for contrast) */
+    --success:          #12B76A;
+    --success-subtle:   rgba(18, 183, 106, 0.14);
+    --warning:          #F79009;
+    --warning-subtle:   rgba(247, 144, 9, 0.14);
+    --error:            #F04438;
+    --error-subtle:     rgba(240, 68, 56, 0.14);
+    --info:             #53B1FD;
+    --info-subtle:      rgba(83, 177, 253, 0.14);
+
+    /* Shadows (dark — minimal, lean on borders instead) */
+    --shadow-xs:  0 1px 2px rgba(0, 0, 0, 0.40);
+    --shadow-sm:  0 1px 3px rgba(0, 0, 0, 0.50), 0 1px 2px rgba(0, 0, 0, 0.30);
+    --shadow-md:  0 4px 8px -2px rgba(0, 0, 0, 0.50), 0 2px 4px -2px rgba(0, 0, 0, 0.30);
+    --shadow-lg:  0 12px 16px -4px rgba(0, 0, 0, 0.55), 0 4px 6px -2px rgba(0, 0, 0, 0.30);
+    --shadow-xl:  0 20px 24px -4px rgba(0, 0, 0, 0.60), 0 8px 8px -4px rgba(0, 0, 0, 0.35);
+    --shadow-focus: 0 0 0 4px rgba(254, 80, 1, 0.32);
+
+    /* Data viz — same hues, slightly desaturated alternatives if needed */
+    --viz-1: #FE5001;
+    --viz-2: #53B1FD;
+    --viz-3: #F9B70E;
+    --viz-4: #15B79E;
+    --viz-5: #9B8AFB;
+    --viz-6: #F670C7;
+    --viz-7: #32D583;
+    --viz-8: #98A2B3;
+  }
+
+  /* Respect prefers-reduced-motion globally */
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
