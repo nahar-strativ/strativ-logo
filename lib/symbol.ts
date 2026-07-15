@@ -49,19 +49,19 @@ function round(n: number, p = 3): number {
   return Math.round(n * f) / f
 }
 
-// Rasterize an SVG string to a PNG blob at the given size.
-export function svgToPngBlob(svg: string, size = 200): Promise<Blob> {
+// Rasterize an SVG string to a PNG blob at the given dimensions.
+export function svgToPngBlob(svg: string, width = 200, height = width): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const img = new Image()
     const url = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(svg)}`
     img.onload = () => {
       const canvas = document.createElement('canvas')
-      canvas.width = size
-      canvas.height = size
+      canvas.width = width
+      canvas.height = height
       const ctx = canvas.getContext('2d')
       if (!ctx) return reject(new Error('Canvas 2D context unavailable'))
-      ctx.clearRect(0, 0, size, size) // keep alpha for transparent backgrounds
-      ctx.drawImage(img, 0, 0, size, size)
+      ctx.clearRect(0, 0, width, height) // keep alpha for transparent backgrounds
+      ctx.drawImage(img, 0, 0, width, height)
       canvas.toBlob((blob) => {
         if (blob) resolve(blob)
         else reject(new Error('PNG export failed'))

@@ -9,7 +9,9 @@ export interface PatternConfig {
   fg: ColorValue // symbol colour
   bg: ColorValue // background colour
   tile: number // base grid cell in px (smaller = denser / smaller marks)
-  size?: number // output px, default 600
+  sizeVariation?: number // 0 = all marks equal size, 1 = widest size spread
+  width?: number // output px, default 1200
+  height?: number // output px, default 600
   seed?: number // layout seed
 }
 
@@ -24,40 +26,44 @@ function mulberry32(a: number): () => number {
   }
 }
 
-export function buildPatternSvg({ fg, bg, tile, size = 600, seed = 1 }: PatternConfig): string {
+export function buildPatternSvg({ fg, bg, tile, sizeVariation = 0.6, width = 1200, height = 600, seed = 1 }: PatternConfig): string {
   const rand = mulberry32(seed)
   const fgFill = fg === TRANSPARENT ? 'none' : fg
   const paths = SYMBOL_PATHS.map((d) => `<path d="${d}"/>`).join('')
 
   const marks: string[] = []
-  const cols = Math.ceil(size / tile)
-  const rows = Math.ceil(size / tile)
+  const cols = Math.ceil(width / tile)
+  const rows = Math.ceil(height / tile)
+
+  // Size range centred at 55% of the cell; the spread grows with sizeVariation
+  // (0 → every mark identical, 1 → sizes span ~15%..95% of the cell).
+  const center = 0.55
+  const spread = 0.4 * Math.max(0, Math.min(1, sizeVariation))
 
   // Iterate one cell past each edge so marks fill the borders (clipped by viewBox).
   for (let r = -1; r <= rows; r++) {
     for (let c = -1; c <= cols; c++) {
-      // Randomized size: 30%..95% of the cell.
-      const markH = tile * (0.3 + rand() * 0.65)
+      const frac = Math.max(0.08, center - spread + rand() * spread * 2)
+      const markH = tile * frac
       const scale = markH / SYMBOL_VIEW.h
       const markW = SYMBOL_VIEW.w * scale
 
-      // Cell centre + position jitter up to ±35% of the cell.
+      // Cell centre + position jitter up to ±35% of the cell. Angle stays upright.
       const cx = c * tile + tile / 2 + (rand() - 0.5) * tile * 0.7
       const cy = r * tile + tile / 2 + (rand() - 0.5) * tile * 0.7
-      const rot = Math.floor(rand() * 360)
 
       const tx = cx - markW / 2
       const ty = cy - markH / 2
       marks.push(
-        `<g transform="translate(${round(tx)} ${round(ty)}) rotate(${rot} ${round(markW / 2)} ${round(markH / 2)}) scale(${round(scale, 5)})">${paths}</g>`,
+        `<g transform="translate(${round(tx)} ${round(ty)}) scale(${round(scale, 5)})">${paths}</g>`,
       )
     }
   }
 
-  const bgRect = bg === TRANSPARENT ? '' : `<rect width="${size}" height="${size}" fill="${bg}"/>`
+  const bgRect = bg === TRANSPARENT ? '' : `<rect width="${width}" height="${height}" fill="${bg}"/>`
 
   return (
-    `<svg xmlns="http://www.w3.org/2000/svg" width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">` +
+    `<svg xmlns="http://www.w3.org/2000/svg" width="${width}" height="${height}" viewBox="0 0 ${width} ${height}">` +
     bgRect +
     `<g fill="${fgFill}" fill-rule="evenodd">${marks.join('')}</g>` +
     `</svg>`

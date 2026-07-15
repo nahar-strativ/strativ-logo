@@ -7,7 +7,8 @@ import { svgToPngBlob, TRANSPARENT, type ColorValue } from '@/lib/symbol'
 import { contrastRatio, randomSubtlePair } from '@/lib/color'
 import { ColorControl, Swatch, checkerStyle } from './controls'
 
-const OUTPUT = 600
+const OUTPUT_W = 1200
+const OUTPUT_H = 600
 
 interface Preset {
   name: string
@@ -28,10 +29,14 @@ export function PatternSection() {
   const [fg, setFg] = useState<ColorValue>('#2A1E2C')
   const [bg, setBg] = useState<ColorValue>('#1A0E1C')
   const [tile, setTile] = useState(120)
+  const [sizeVar, setSizeVar] = useState(0.6)
   const [seed, setSeed] = useState(1234) // fixed initial seed → stable SSR/first paint
   const [copied, setCopied] = useState(false)
 
-  const svg = useMemo(() => buildPatternSvg({ fg, bg, tile, size: OUTPUT, seed }), [fg, bg, tile, seed])
+  const svg = useMemo(
+    () => buildPatternSvg({ fg, bg, tile, sizeVariation: sizeVar, width: OUTPUT_W, height: OUTPUT_H, seed }),
+    [fg, bg, tile, sizeVar, seed],
+  )
 
   const bothSolid = fg !== TRANSPARENT && bg !== TRANSPARENT
   const ratio = bothSolid ? contrastRatio(fg, bg) : null
@@ -50,11 +55,11 @@ export function PatternSection() {
   }, [])
 
   const download = useCallback(async () => {
-    const blob = await svgToPngBlob(svg, OUTPUT)
+    const blob = await svgToPngBlob(svg, OUTPUT_W, OUTPUT_H)
     const url = URL.createObjectURL(blob)
     const a = document.createElement('a')
     a.href = url
-    a.download = 'strativ-pattern-600x600.png'
+    a.download = `strativ-pattern-${OUTPUT_W}x${OUTPUT_H}.png`
     a.click()
     URL.revokeObjectURL(url)
   }, [svg])
@@ -83,7 +88,7 @@ export function PatternSection() {
         {/* Preview */}
         <div className="card-strativ flex flex-col items-center justify-center gap-6 py-10">
           <div
-            className="aspect-square w-full max-w-[420px] overflow-hidden rounded-lg border border-border-subtle [&>svg]:h-full [&>svg]:w-full"
+            className="aspect-[2/1] w-full overflow-hidden rounded-lg border border-border-subtle [&>svg]:h-full [&>svg]:w-full"
             style={checkerStyle}
             aria-label="Pattern preview"
             dangerouslySetInnerHTML={{ __html: svg }}
@@ -104,7 +109,7 @@ export function PatternSection() {
               {copied ? 'Copied' : 'Copy SVG'}
             </button>
           </div>
-          <p className="text-xs text-text-tertiary">600 × 600 px PNG with alpha</p>
+          <p className="text-xs text-text-tertiary">{OUTPUT_W} × {OUTPUT_H} px PNG with alpha</p>
         </div>
 
         {/* Controls */}
@@ -151,6 +156,22 @@ export function PatternSection() {
               className="w-full accent-[--accent]"
             />
             <p className="mt-2 text-xs text-text-tertiary">Smaller tile = denser, smaller marks.</p>
+
+            <label className="mb-3 mt-6 flex items-center justify-between text-sm font-medium text-text-primary">
+              Size variation
+              <span className="tabular-nums text-text-tertiary">{Math.round(sizeVar * 100)}%</span>
+            </label>
+            <input
+              type="range"
+              min={0}
+              max={1}
+              step={0.05}
+              value={sizeVar}
+              onChange={(e) => setSizeVar(Number(e.target.value))}
+              className="w-full accent-[--accent]"
+            />
+            <p className="mt-2 text-xs text-text-tertiary">0% = all marks equal size · higher = more size mix.</p>
+
             <button
               onClick={shuffleLayout}
               className="mt-4 inline-flex h-9 w-full items-center justify-center gap-2 rounded-md border border-border-default px-4 text-sm font-medium text-text-primary transition-colors duration-fast hover:border-border-strong"
