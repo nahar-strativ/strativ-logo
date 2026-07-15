@@ -35,10 +35,11 @@ export function buildPatternSvg({ fg, bg, tile, sizeVariation = 0.6, width = 120
   const cols = Math.ceil(width / tile)
   const rows = Math.ceil(height / tile)
 
-  // Size range centred at 55% of the cell; the spread grows with sizeVariation
-  // (0 → every mark identical, 1 → sizes span ~15%..95% of the cell).
-  const center = 0.55
-  const spread = 0.4 * Math.max(0, Math.min(1, sizeVariation))
+  // Size range centred at 70% of the cell; the spread grows with sizeVariation
+  // (0 → every mark identical, 1 → sizes span ~10%..230% of the cell, so large
+  // marks overlap several cells for a dramatic mixed-scale field).
+  const center = 0.7
+  const spread = 1.2 * Math.max(0, Math.min(1, sizeVariation))
 
   // Iterate one cell past each edge so marks fill the borders (clipped by viewBox).
   for (let r = -1; r <= rows; r++) {
