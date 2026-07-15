@@ -1,6 +1,6 @@
 'use client'
 
-import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useState } from 'react'
 import { Download, Shuffle, Moon, Sun, Check, Copy } from 'lucide-react'
 import { buildSymbolSvg, svgToPngBlob, TRANSPARENT, type ColorValue } from '@/lib/symbol'
 import { contrastRatio, randomContrastPair } from '@/lib/color'

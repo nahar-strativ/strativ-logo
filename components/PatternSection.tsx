@@ -14,13 +14,14 @@ interface Preset {
   fg: ColorValue
   bg: ColorValue
 }
-// Subtle, tonal brand pairs — mark barely separated from the ground.
+// Subtle, tonal rich pairs — mark barely separated from a jewel-tone ground.
 const PRESETS: Preset[] = [
+  { name: 'Midnight tint', fg: '#26304D', bg: '#0F172A' },
+  { name: 'Indigo tint', fg: '#413E6E', bg: '#1E1B4B' },
+  { name: 'Emerald tint', fg: '#1E5F4C', bg: '#064E3B' },
+  { name: 'Wine tint', fg: '#9C3763', bg: '#831843' },
+  { name: 'Ocean tint', fg: '#356785', bg: '#0C4A6E' },
   { name: 'Warm black tint', fg: '#2A1E2C', bg: '#1A0E1C' },
-  { name: 'Orange on deep orange', fg: '#FF6A2A', bg: '#E54600' },
-  { name: 'Light grey', fg: '#E7E7E7', bg: '#F1F1F1' },
-  { name: 'Orange whisper on white', fg: '#FDE7DB', bg: '#FFFFFF' },
-  { name: 'Slate tint', fg: '#3C4657', bg: '#344054' },
 ]
 
 export function PatternSection() {
@@ -38,6 +39,8 @@ export function PatternSection() {
     const pair = randomSubtlePair()
     setFg(pair.fg)
     setBg(pair.bg)
+    // Also randomize the tile size (density) — 60..240px in 10px steps.
+    setTile(60 + Math.floor(Math.random() * 19) * 10)
   }, [])
 
   const download = useCallback(async () => {
