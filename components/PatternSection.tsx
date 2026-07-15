@@ -1,7 +1,7 @@
 'use client'
 
 import { useCallback, useMemo, useState } from 'react'
-import { Download, Shuffle, Copy, Check } from 'lucide-react'
+import { Download, Shuffle, Copy, Check, RefreshCw } from 'lucide-react'
 import { buildPatternSvg } from '@/lib/pattern'
 import { svgToPngBlob, TRANSPARENT, type ColorValue } from '@/lib/symbol'
 import { contrastRatio, randomSubtlePair } from '@/lib/color'
@@ -28,19 +28,25 @@ export function PatternSection() {
   const [fg, setFg] = useState<ColorValue>('#2A1E2C')
   const [bg, setBg] = useState<ColorValue>('#1A0E1C')
   const [tile, setTile] = useState(120)
+  const [seed, setSeed] = useState(1234) // fixed initial seed → stable SSR/first paint
   const [copied, setCopied] = useState(false)
 
-  const svg = useMemo(() => buildPatternSvg({ fg, bg, tile, size: OUTPUT }), [fg, bg, tile])
+  const svg = useMemo(() => buildPatternSvg({ fg, bg, tile, size: OUTPUT, seed }), [fg, bg, tile, seed])
 
   const bothSolid = fg !== TRANSPARENT && bg !== TRANSPARENT
   const ratio = bothSolid ? contrastRatio(fg, bg) : null
+
+  const shuffleLayout = useCallback(() => {
+    setSeed(Math.floor(Math.random() * 1e9))
+  }, [])
 
   const randomize = useCallback(() => {
     const pair = randomSubtlePair()
     setFg(pair.fg)
     setBg(pair.bg)
-    // Also randomize the tile size (density) — 60..240px in 10px steps.
+    // Randomize density and reshuffle the mark layout (sizes/rotation/positions).
     setTile(60 + Math.floor(Math.random() * 19) * 10)
+    setSeed(Math.floor(Math.random() * 1e9))
   }, [])
 
   const download = useCallback(async () => {
@@ -68,7 +74,7 @@ export function PatternSection() {
         </div>
         <h2 className="text-display-sm">Tile the symbol into a pattern</h2>
         <p className="mt-3 text-md text-text-secondary">
-          A repeating field of the mark — meant to sit quietly behind content. The randomizer keeps the two
+          A scattered field of the mark at mixed sizes and angles — meant to sit quietly behind content. The randomizer keeps the two
           colours close (low contrast) so the pattern stays subtle.
         </p>
       </div>
@@ -98,7 +104,7 @@ export function PatternSection() {
               {copied ? 'Copied' : 'Copy SVG'}
             </button>
           </div>
-          <p className="text-xs text-text-tertiary">Seamless tile · 600 × 600 px PNG with alpha</p>
+          <p className="text-xs text-text-tertiary">600 × 600 px PNG with alpha</p>
         </div>
 
         {/* Controls */}
@@ -144,7 +150,14 @@ export function PatternSection() {
               onChange={(e) => setTile(Number(e.target.value))}
               className="w-full accent-[--accent]"
             />
-            <p className="mt-2 text-xs text-text-tertiary">Smaller tile = denser pattern.</p>
+            <p className="mt-2 text-xs text-text-tertiary">Smaller tile = denser, smaller marks.</p>
+            <button
+              onClick={shuffleLayout}
+              className="mt-4 inline-flex h-9 w-full items-center justify-center gap-2 rounded-md border border-border-default px-4 text-sm font-medium text-text-primary transition-colors duration-fast hover:border-border-strong"
+            >
+              <RefreshCw className="h-4 w-4" strokeWidth={1.5} />
+              Shuffle layout
+            </button>
           </div>
 
           <div className="card-strativ">
