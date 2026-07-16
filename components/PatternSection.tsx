@@ -79,7 +79,7 @@ export function PatternSection() {
         </div>
         <h2 className="text-display-sm">Tile the symbol into a pattern</h2>
         <p className="mt-3 text-md text-text-secondary">
-          A scattered field of the mark at mixed sizes and angles — meant to sit quietly behind content. The randomizer keeps the two
+          An even field of the mark at mixed sizes — meant to sit quietly behind content. The randomizer keeps the two
           colours close (low contrast) so the pattern stays subtle.
         </p>
       </div>
@@ -88,7 +88,7 @@ export function PatternSection() {
         {/* Preview */}
         <div className="card-strativ flex flex-col items-center justify-center gap-6 py-10">
           <div
-            className="aspect-[2/1] w-full overflow-hidden rounded-lg border border-border-subtle [&>svg]:h-full [&>svg]:w-full"
+            className="aspect-[2/1] w-full max-w-[560px] self-stretch overflow-hidden rounded-lg border border-border-subtle [&>svg]:h-full [&>svg]:w-full"
             style={checkerStyle}
             aria-label="Pattern preview"
             dangerouslySetInnerHTML={{ __html: svg }}

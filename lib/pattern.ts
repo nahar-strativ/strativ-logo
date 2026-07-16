@@ -35,11 +35,11 @@ export function buildPatternSvg({ fg, bg, tile, sizeVariation = 0.6, width = 120
   const cols = Math.ceil(width / tile)
   const rows = Math.ceil(height / tile)
 
-  // Size range centred at 70% of the cell; the spread grows with sizeVariation
-  // (0 → every mark identical, 1 → sizes span ~10%..230% of the cell, so large
-  // marks overlap several cells for a dramatic mixed-scale field).
-  const center = 0.7
-  const spread = 1.2 * Math.max(0, Math.min(1, sizeVariation))
+  // Size range centred at 50% of the cell; the spread grows with sizeVariation
+  // but stays bounded so marks never exceed their cell — keeps the field
+  // orderly. 0 → every mark identical; 1 → sizes span ~15%..85% of the cell.
+  const center = 0.5
+  const spread = 0.35 * Math.max(0, Math.min(1, sizeVariation))
 
   // Iterate one cell past each edge so marks fill the borders (clipped by viewBox).
   for (let r = -1; r <= rows; r++) {
@@ -49,9 +49,10 @@ export function buildPatternSvg({ fg, bg, tile, sizeVariation = 0.6, width = 120
       const scale = markH / SYMBOL_VIEW.h
       const markW = SYMBOL_VIEW.w * scale
 
-      // Cell centre + position jitter up to ±35% of the cell. Angle stays upright.
-      const cx = c * tile + tile / 2 + (rand() - 0.5) * tile * 0.7
-      const cy = r * tile + tile / 2 + (rand() - 0.5) * tile * 0.7
+      // Cell centre + gentle position jitter (±12% of the cell) so the grid
+      // stays legible and harmonious rather than scattered. Angle stays upright.
+      const cx = c * tile + tile / 2 + (rand() - 0.5) * tile * 0.24
+      const cy = r * tile + tile / 2 + (rand() - 0.5) * tile * 0.24
 
       const tx = cx - markW / 2
       const ty = cy - markH / 2
